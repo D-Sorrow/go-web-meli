@@ -26,37 +26,23 @@ func NewProductJSON(path string) (*ProductJSON, error) {
 		return nil, errors.New("error opening product file")
 	}
 
+	reader := bufio.NewReader(file)
+
+	byteValue, err := io.ReadAll(reader)
+
+	err = json.Unmarshal(byteValue, &products)
+
 	return &ProductJSON{file}, nil
 }
 
 func (product *ProductJSON) GetProducts() ([]domain.Product, error) {
 
-	reader := bufio.NewReader(product.file)
-
-	byteValue, err := io.ReadAll(reader)
-
-	if err != nil {
-		return products, errors.New(errMessage)
-	}
-
 	if len(products) != 0 {
 		return products, nil
 	}
-
-	err = json.Unmarshal(byteValue, &products)
-
-	if err != nil {
-		return products, errors.New(errMessage)
-	}
-
 	return products, nil
-
 }
 func (product *ProductJSON) GetProductById(id int) (domain.Product, error) {
-	products, err := product.GetProducts()
-	if err != nil {
-		return domain.Product{}, err
-	}
 	for _, product := range products {
 		if product.Id == id {
 			return product, nil
@@ -65,11 +51,7 @@ func (product *ProductJSON) GetProductById(id int) (domain.Product, error) {
 	return domain.Product{}, errors.New("Product not found")
 }
 func (product *ProductJSON) GetProductByPriceGt(priceGt float64) ([]domain.Product, error) {
-	products, err := product.GetProducts()
 	var productUpThanPriceGt []domain.Product
-	if err != nil {
-		return []domain.Product{}, err
-	}
 	for _, product := range products {
 		if product.Price > priceGt {
 			productUpThanPriceGt = append(productUpThanPriceGt, product)
@@ -78,7 +60,6 @@ func (product *ProductJSON) GetProductByPriceGt(priceGt float64) ([]domain.Produ
 	return productUpThanPriceGt, nil
 }
 func (product *ProductJSON) AddProduct(productAdd domain.Product) error {
-
 	if ValidateCodeValue(productAdd.Code_value) {
 		return errors.New("Product code is already in use")
 	}
