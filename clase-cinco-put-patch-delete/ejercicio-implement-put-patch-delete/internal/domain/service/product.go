@@ -2,7 +2,7 @@ package service
 
 import (
 	"errors"
-	"github.com/D-Sorrow/go-web-meli/clase-cuatro-arquitectura-carpetas/ejercicio-uno-dominios/internal/domain"
+	"github.com/D-Sorrow/go-web-meli/clase-cinco-put-patch-delete/ejercicio-implement-put-patch-delete/internal/domain"
 )
 
 type ProductService struct {
@@ -47,6 +47,29 @@ func (p *ProductService) AddProduct(product domain.Product) error {
 	return nil
 }
 
+func (p *ProductService) UpdateProduct(product domain.Product) error {
+	err := p.ProductRepo.UpdateProduct(product)
+	if err != nil {
+		return errors.New("error updating product")
+	}
+	return nil
+}
+
+func (p *ProductService) PatchProduct(id int, attributes map[string]any) error {
+	err := p.ProductRepo.PatchProduct(id, attributes)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (p *ProductService) DeleteProduct(id int) error {
+	err := p.ProductRepo.DeleteProduct(id)
+	if err != nil {
+		return errors.New("error deleting product")
+	}
+	return nil
+}
 func NewProductService(productRepo domain.ProductRepository) *ProductService {
 	return &ProductService{ProductRepo: productRepo}
 }

@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
-	"github.com/D-Sorrow/go-web-meli/clase-cuatro-arquitectura-carpetas/ejercicio-uno-dominios/internal/domain"
+	"github.com/D-Sorrow/go-web-meli/clase-cinco-put-patch-delete/ejercicio-implement-put-patch-delete/internal/domain"
 	"github.com/go-chi/chi/v5"
 	"net/http"
 	"strconv"
@@ -23,6 +23,9 @@ func Router(hd *Product) *chi.Mux {
 	rt.Get("/{id}", hd.GetProductById)
 	rt.Get("/search/{priceGt}", hd.GetProductByPriceGt)
 	rt.Post("/", hd.AddProduct)
+	rt.Put("/", hd.UpdateProduct)
+	rt.Patch("/{id}", hd.PatchProduct)
+	rt.Delete("/{id}", hd.DeleteProduct)
 	return rt
 }
 
@@ -117,5 +120,66 @@ func (product *Product) AddProduct(response http.ResponseWriter, request *http.R
 		return
 	}
 	response.Header().Set("Content-Type", "application/json")
+	response.WriteHeader(http.StatusCreated)
+}
+
+func (p *Product) UpdateProduct(response http.ResponseWriter, request *http.Request) {
+	var productUpdate domain.Product
+	err := json.NewDecoder(request.Body).Decode(&productUpdate)
+	if err != nil {
+		response.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(response).Encode(Message{
+			Message: "error decoder product",
+		})
+		return
+	}
+	err = p.productService.UpdateProduct(productUpdate)
+	if err != nil {
+		response.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(response).Encode(Message{
+			Message: err.Error(),
+		})
+		return
+	}
+	response.Header().Set("Content-Type", "application/json")
+	response.WriteHeader(http.StatusCreated)
+}
+
+func (p *Product) PatchProduct(response http.ResponseWriter, request *http.Request) {
+	idProduct, _ := strconv.Atoi(chi.URLParam(request, "id"))
+
+	var attributes map[string]any
+
+	if er := json.NewDecoder(request.Body).Decode(&attributes); er != nil {
+		response.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(response).Encode(Message{
+			Message: "error decoder product patch",
+		})
+	}
+
+	err := p.productService.PatchProduct(idProduct, attributes)
+
+	if err != nil {
+		response.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(response).Encode(Message{
+			Message: err.Error(),
+		})
+		return
+	}
+
+	response.WriteHeader(http.StatusCreated)
+
+}
+
+func (p *Product) DeleteProduct(response http.ResponseWriter, request *http.Request) {
+	idProduct, _ := strconv.Atoi(chi.URLParam(request, "id"))
+	err := p.productService.DeleteProduct(idProduct)
+	if err != nil {
+		response.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(response).Encode(Message{
+			Message: err.Error(),
+		})
+		return
+	}
 	response.WriteHeader(http.StatusCreated)
 }

@@ -4,7 +4,7 @@ import (
 	"bufio"
 	"encoding/json"
 	"errors"
-	"github.com/D-Sorrow/go-web-meli/clase-cuatro-arquitectura-carpetas/ejercicio-uno-dominios/internal/domain"
+	"github.com/D-Sorrow/go-web-meli/clase-cinco-put-patch-delete/ejercicio-implement-put-patch-delete/internal/domain"
 	"io"
 	"os"
 	"time"
@@ -15,8 +15,7 @@ type ProductJSON struct {
 }
 
 var (
-	errMessage = "Error reading product file"
-	products   []domain.Product
+	products []domain.Product
 )
 
 func NewProductJSON(path string) (*ProductJSON, error) {
@@ -74,6 +73,65 @@ func (product *ProductJSON) AddProduct(productAdd domain.Product) error {
 	}
 	products = append(products, productAdd)
 	return nil
+}
+
+func (product *ProductJSON) UpdateProduct(productUpdate domain.Product) error {
+	for _, product := range products {
+		if product.Id == productUpdate.Id {
+			products[product.Id-1] = productUpdate
+			return nil
+		}
+	}
+	if ValidateCodeValue(productUpdate.Code_value) {
+		return errors.New("Product code is already in use")
+	}
+	if ValidateDateExpiration(productUpdate.Expiration) {
+		return errors.New("Product date expiration is not valid")
+	}
+	productUpdate.Id = products[len(products)-1].Id + 1
+	products = append(products, productUpdate)
+	return nil
+
+}
+
+func (product *ProductJSON) PatchProduct(id int, attributes map[string]any) error {
+	for _, product := range products {
+		if product.Id == id {
+			for key, value := range attributes {
+				switch key {
+				case "name":
+					product.Name = value.(string)
+				case "quantity":
+					product.Quantity = int(value.(float64))
+				case "code_value":
+					if ValidateCodeValue(value.(string)) {
+						return errors.New("Product code is already in use")
+					}
+					product.Code_value = value.(string)
+				case "is_published":
+					product.Is_published = value.(bool)
+				case "Expiration":
+					product.Expiration = value.(string)
+				case "price":
+					product.Price = value.(float64)
+				default:
+					return errors.New("Error patching product")
+				}
+			}
+			products[id-1] = product
+		}
+	}
+	return nil
+}
+
+func (p *ProductJSON) DeleteProduct(id int) error {
+	for i, product := range products {
+		if product.Id == id {
+			products = append(products[:i], products[i+1:]...)
+			return nil
+		}
+	}
+	return errors.New("Product not found")
 }
 
 func ValidateCodeValue(code string) bool {
