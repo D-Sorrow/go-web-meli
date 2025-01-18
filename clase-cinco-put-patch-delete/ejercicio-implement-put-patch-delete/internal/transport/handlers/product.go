@@ -167,7 +167,7 @@ func (p *Product) PatchProduct(response http.ResponseWriter, request *http.Reque
 		return
 	}
 
-	response.WriteHeader(http.StatusCreated)
+	response.WriteHeader(http.StatusNoContent)
 
 }
 
@@ -181,5 +181,5 @@ func (p *Product) DeleteProduct(response http.ResponseWriter, request *http.Requ
 		})
 		return
 	}
-	response.WriteHeader(http.StatusCreated)
+	response.WriteHeader(http.StatusOK)
 }
