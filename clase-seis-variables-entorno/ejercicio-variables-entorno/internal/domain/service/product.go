@@ -2,6 +2,8 @@ package service
 
 import (
 	"errors"
+	"fmt"
+
 	"github.com/D-Sorrow/go-web-meli/clase-seis-variables-entorno/ejercicios-variables-entorno/internal/domain"
 )
 
@@ -42,6 +44,7 @@ func (p *ProductService) GetProductByPriceGt(priceGt float64) ([]domain.Product,
 func (p *ProductService) AddProduct(product domain.Product) error {
 	err := p.ProductRepo.AddProduct(product)
 	if err != nil {
+		fmt.Print(err)
 		return err
 	}
 	return nil

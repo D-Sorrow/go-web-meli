@@ -2,9 +2,10 @@ package storage
 
 import (
 	"encoding/json"
-	"github.com/D-Sorrow/go-web-meli/clase-seis-variables-entorno/ejercicios-variables-entorno/internal/domain"
 	"io"
 	"os"
+
+	"github.com/D-Sorrow/go-web-meli/clase-seis-variables-entorno/ejercicios-variables-entorno/internal/domain"
 )
 
 type StorageJSON struct {
@@ -48,7 +49,7 @@ func (storageJson *StorageJSON) WriteAll(products []domain.Product) error {
 		return err
 	}
 
-	file, err := os.Create("products.json")
+	file, err := os.Create("../../products.json")
 
 	if err != nil {
 		return err

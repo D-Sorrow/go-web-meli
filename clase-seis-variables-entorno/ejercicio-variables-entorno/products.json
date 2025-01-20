@@ -4525,5 +4525,14 @@
     "is_published": true,
     "expiration": "15/12/2029",
     "price": 71.42
+  },
+  {
+    "id": 504,
+    "name": "Margarinrre",
+    "quantity": 1,
+    "code_value": "8D28U3asaIUHD",
+    "is_published": true,
+    "expiration": "15/12/2029",
+    "price": 71.42
   }
 ]

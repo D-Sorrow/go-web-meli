@@ -2,18 +2,19 @@ package main
 
 import (
 	"errors"
+	"net/http"
+
 	"github.com/D-Sorrow/go-web-meli/clase-seis-variables-entorno/ejercicios-variables-entorno/internal/domain/service"
 	"github.com/D-Sorrow/go-web-meli/clase-seis-variables-entorno/ejercicios-variables-entorno/internal/infrastucture/persistence/file"
 	"github.com/D-Sorrow/go-web-meli/clase-seis-variables-entorno/ejercicios-variables-entorno/internal/infrastucture/persistence/storage"
 	"github.com/D-Sorrow/go-web-meli/clase-seis-variables-entorno/ejercicios-variables-entorno/internal/transport/handlers"
 	rout "github.com/D-Sorrow/go-web-meli/clase-seis-variables-entorno/ejercicios-variables-entorno/internal/transport/router"
 	"github.com/go-chi/chi/v5"
-	"net/http"
 )
 
 func main() {
 
-	storage := storage.NewStorageJSON("products.json")
+	storage := storage.NewStorageJSON("../../products.json")
 
 	file, err := file.NewProductJSON(storage)
 

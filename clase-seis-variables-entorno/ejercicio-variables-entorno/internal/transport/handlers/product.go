@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	"github.com/D-Sorrow/go-web-meli/clase-seis-variables-entorno/ejercicios-variables-entorno/internal/domain"
+	"github.com/D-Sorrow/go-web-meli/clase-seis-variables-entorno/ejercicios-variables-entorno/internal/transport/utils/validate"
 	res "github.com/D-Sorrow/go-web-meli/clase-seis-variables-entorno/ejercicios-variables-entorno/plataform/web/response"
 	"github.com/go-chi/chi/v5"
 )
@@ -90,16 +91,15 @@ func (product *Product) GetProductByPriceGt(response http.ResponseWriter, reques
 
 func (product *Product) AddProduct(response http.ResponseWriter, request *http.Request) {
 
-	token := request.Header.Get("TOKEN_API")
-	if token != os.Getenv("TOKEN_API") || token == "" {
-		res.SetError(response, http.StatusUnauthorized, "Unauthorized")
-		return
-	}
-
 	var productAdd domain.Product
 
 	if err := json.NewDecoder(request.Body).Decode(&productAdd); err != nil {
 		res.SetError(response, http.StatusInternalServerError, "error json decoder")
+		return
+	}
+
+	if errValidate := validate.Validate(productAdd); errValidate != nil {
+		res.SetError(response, http.StatusInternalServerError, errValidate.Error())
 		return
 	}
 	err := product.productService.AddProduct(productAdd)
