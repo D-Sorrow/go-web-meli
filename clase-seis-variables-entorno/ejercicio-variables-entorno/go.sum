@@ -1,4 +1,4 @@
-github.com/D-Sorrow/go-web-meli/clase-cuatro-arquitectura-carpetas/ejercicio-uno-dominios v0.0.0-20250117191745-5288fc04baec h1:nD44WXsIdx3ElaLAHpsOHEtWQhvPcyoMaAInmr+dmG0=
-github.com/D-Sorrow/go-web-meli/clase-cuatro-arquitectura-carpetas/ejercicio-uno-dominios v0.0.0-20250117191745-5288fc04baec/go.mod h1:mveKbG1DNF8pgckjMUD6fpE8E0jlFNOFT0GcQyuy8R4=
 github.com/go-chi/chi/v5 v5.2.0 h1:Aj1EtB0qR2Rdo2dG4O94RIU35w2lvQSj6BRA4+qwFL0=
 github.com/go-chi/chi/v5 v5.2.0/go.mod h1:DslCQbL2OYiznFReuXYUmQ2hGd1aDpCnlMNITLSKoi8=
+github.com/stretchr/testify v1.10.0 h1:Xv5erBjTwe/5IxqUQTdXv5kgmIvbHo3QQyRwhJsOfJA=
+github.com/stretchr/testify v1.10.0/go.mod h1:r2ic/lqez/lEtzL7wO/rwa5dbSLXVDPFyf8C91i36aY=
